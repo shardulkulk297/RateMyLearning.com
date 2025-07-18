@@ -68,7 +68,7 @@ public class ReviewerService {
         /*
         Checking whether the extension is valid or not
          */
-        if (!(List.of("jpg", "jpeg", "png", "gif", "svg").contains(extension))){
+        if (!(List.of("jpg", "jpeg", "png", "gif", "svg").contains(extension.toLowerCase()))){
             throw new RuntimeException("File Extension " + extension + " not allowed " + "Allowed Extensions"
                     + List.of("jpg", "jpeg", "png", "gif", "svg"));
         }

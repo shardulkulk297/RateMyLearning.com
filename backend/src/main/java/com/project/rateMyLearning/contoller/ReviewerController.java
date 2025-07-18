@@ -24,7 +24,7 @@ public class ReviewerController {
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewerService.addReviewer(reviewer));
     }
 
-    @PutMapping("/api/reviewer/profile/upload/{reviewerId}")
+    @PostMapping("/api/reviewer/profile/upload/{reviewerId}")
     public ResponseEntity<?> uploadProfile(@PathVariable int reviewerId, @RequestParam MultipartFile file) throws IOException {
         return ResponseEntity.status(HttpStatus.OK).body(reviewerService.uploadLogoSignUp(reviewerId, file));
     }

@@ -23,6 +23,10 @@ public class CustomerUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
         User user = userRepository.getByUsername(username);
+
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
         SimpleGrantedAuthority sga = new SimpleGrantedAuthority(user.getRole().toString());
         List<GrantedAuthority> list = List.of(sga);
 
