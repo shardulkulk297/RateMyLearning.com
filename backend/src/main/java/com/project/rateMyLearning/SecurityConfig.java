@@ -28,12 +28,14 @@ public class SecurityConfig {
                         .requestMatchers("/api/user/getToken").authenticated()
                         .requestMatchers("/api/user/getLoggedInUserDetails").authenticated()
                         .requestMatchers("/api/reviewer/add").permitAll()
+                        .requestMatchers("/api/reviewer/profile/upload/{reviewerId}").permitAll()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(Customizer.withDefaults());
         return http.build();
 
     }
+
 
     @Bean
     PasswordEncoder passwordEncoder(){
