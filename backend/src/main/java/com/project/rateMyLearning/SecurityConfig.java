@@ -25,7 +25,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize->authorize
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/user/signup").permitAll()
-
+                        .requestMatchers("/api/user/getToken").authenticated()
+                        .requestMatchers("/api/user/getLoggedInUserDetails").authenticated()
+                        .requestMatchers("/api/reviewer/add").permitAll()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(Customizer.withDefaults());

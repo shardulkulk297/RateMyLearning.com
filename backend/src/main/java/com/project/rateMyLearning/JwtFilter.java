@@ -1,4 +1,5 @@
 package com.project.rateMyLearning;
+import com.project.rateMyLearning.exception.ResourceNotFoundException;
 import com.project.rateMyLearning.service.CustomerUserDetailsService;
 import com.project.rateMyLearning.utility.JwtUtil;
 import jakarta.servlet.FilterChain;
@@ -78,6 +79,10 @@ public class JwtFilter extends OncePerRequestFilter {
                 Continue down the filter Chain
                  */
                 filterChain.doFilter(request, response);
+            }
+            else{
+                throw new ResourceNotFoundException("User with this details does not exist");
+
             }
 
 

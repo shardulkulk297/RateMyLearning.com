@@ -18,6 +18,10 @@ public class JwtUtil {
     //Taking secret key
     private static String secretKey;
 
+    public JwtUtil(){
+
+    }
+
     public JwtUtil(@Value("${app.jwt.secret}") String secretKey){
         this.secretKey = secretKey;
     }
