@@ -9,6 +9,7 @@ public class Reviewer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+    @Column(nullable = false, unique = true)
     private String  email;
     private String contact;
     @OneToOne
