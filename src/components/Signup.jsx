@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react'
 import toast from 'react-hot-toast';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Signup = () => {
     const [username, setUsername] = useState("");
@@ -12,26 +12,40 @@ const Signup = () => {
     const [profilePic, setProfilePic] = useState("");
     const [bio, setBio] = useState("");
 
-    const signUpUser = async()=>{
+    const navigate = useNavigate();
 
+    const signUpUser = async () => {
         try {
-            const response = await axios.post("http://localhost:8080/api/reviewer/add",{
-                
-                'user':{
+            const response = await axios.post("http://localhost:8080/api/reviewer/add", {
+                'user': {
                     'username': username,
-                    'password': password 
+                    'password': password
                 },
                 'name': name,
                 'email': email,
                 'contact': contact,
-                'bio': bio 
+                'bio': bio
             });
             console.log(response.data);
+
+            let reviewerId = response.data.id;
+
+            //uploading the profile picture
+            const formData = new FormData();
+            formData.append("file", profilePic);
+            const response2 = await axios.post(`http://localhost:8080/api/reviewer/profile/upload/${reviewerId}`,
+                formData
+            )
+            console.log(response2.data);
+
+
             toast.success("SignUp Successful!!");
-            
+            navigate("/");
+
         } catch (error) {
             console.log(error);
-            toast.error(error.response.data.message);
+            const errMsg = error.response?.data?.message || 'An unknown error occurred.';
+            toast.error(errMsg);
         }
 
     }
@@ -39,7 +53,7 @@ const Signup = () => {
     return (
         <div className='container py-5'>
             <h1 className='p-1'>Sign up to Rate My Learning</h1>
-            <div className='row d-flex justify-content-center align-items-center' style={{minHeight: "100vh"}}>
+            <div className='row d-flex justify-content-center align-items-center' style={{ minHeight: "100vh" }}>
                 <div className='col-md-auto'>
                     <div className='card shadow-sm' style={{ width: "40rem" }}>
                         <div className='card-header'>
@@ -50,7 +64,7 @@ const Signup = () => {
                                 <input type="text" className='form-control' placeholder='Enter Username' onChange={e => setUsername(e.target.value)} />
                             </div>
                             <div className='mb-4'>
-                                <input type="text" className='form-control' placeholder='Enter Password' onChange={e => setPassword(e.target.value)} />
+                                <input type="password" className='form-control' placeholder='Enter Password' onChange={e => setPassword(e.target.value)} />
                             </div>
                             <div className='mb-4'>
                                 <input type="text" className='form-control' placeholder='Enter Name' onChange={e => setName(e.target.value)} />
@@ -62,11 +76,8 @@ const Signup = () => {
                                 <input type="text" className='form-control' placeholder='Enter Contact' onChange={e => setContact(e.target.value)} />
                             </div>
                             <div className='mb-4'>
-                                <textArea className="form-control" placeholder="Enter Your bio" onChange={e=>setBio(e.target.value)}></textArea>
+                                <textArea className="form-control" placeholder="Enter Your bio" onChange={e => setBio(e.target.value)}></textArea>
 
-                            </div>
-                            <div className='mb-4'>
-                                <input type="text" className='form-control' placeholder='Enter Contact number' onChange={e => setContact(e.target.value)} />
                             </div>
                             <div className='mb-4'>
                                 <label htmlFor="" className='form-label'>Upload your profile pic</label>

@@ -59,7 +59,7 @@ const Login = () => {
                                 <input type="text" className='form-control' placeholder='Enter Password' />
                             </div>
                             <div className='mb-4 d-flex justify-content-center align-items-center'>
-                                <button className='btn btn-primary'>Sign Up</button>
+                                <button onClick={loginUser} className='btn btn-primary'>Sign Up</button>
                             </div>
         
                             <div>
