@@ -1,5 +1,5 @@
 package com.project.rateMyLearning;
-import com.project.rateMyLearning.exception.ResourceNotFoundException;
+
 import com.project.rateMyLearning.service.CustomerUserDetailsService;
 import com.project.rateMyLearning.utility.JwtUtil;
 import jakarta.servlet.FilterChain;
@@ -16,13 +16,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-
-/*
-File responsible for Checking every request for the token, filter for every single request
- */
 @Component
 public class JwtFilter extends OncePerRequestFilter {
-
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -34,64 +29,33 @@ public class JwtFilter extends OncePerRequestFilter {
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain
-    ) throws ServletException, IOException{
-        try{
-            String username = null;
-            String jwt = null;
+    ) throws ServletException, IOException {
+        final String authorizationHeader = request.getHeader("Authorization");
+        String username = null;
+        String jwt = null;
 
-            /*
-            Reading the auth Header
-             */
-
-            final String authorizationHeader = request.getHeader("Authorization");
-
-            /*
-            Removing bearer from the Header
-             */
-
-            if(authorizationHeader != null && authorizationHeader.startsWith("Bearer")){
-                jwt = authorizationHeader.substring(7);
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            jwt = authorizationHeader.substring(7);
+            try {
                 username = jwtUtil.extractUsername(jwt);
+            } catch (Exception e) {
+                System.out.println("Invalid JWT Token: " + e.getMessage());
             }
+        }
 
-            /*
-            Checking for the user in the DB and loading its details
-             */
+        // **CRUCIAL FIX**: Only proceed if we have a username and the user is not already authenticated
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(username);
 
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-
-            /*
-            Validating the token by using the verifyToken Method
-             */
-
-            boolean isValid = jwtUtil.verifyToken(jwt, username);
-
-            /*
-            If the token is valid and not expired then we will create a authentication object and set it in the spring context so that the token will be used as signing key once per request
-             */
-            if(isValid){
+            if (jwtUtil.verifyToken(jwt, userDetails.getUsername())) {
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-
-                /*
-                Continue down the filter Chain
-                 */
-                filterChain.doFilter(request, response);
             }
-            else{
-                throw new ResourceNotFoundException("User with this details does not exist");
-
-            }
-
-
         }
-        catch (Exception e){
-            System.out.println(e);
-            filterChain.doFilter(request, response);
-        }
+
+        // Always continue the filter chain
+        filterChain.doFilter(request, response);
     }
-
-
 }

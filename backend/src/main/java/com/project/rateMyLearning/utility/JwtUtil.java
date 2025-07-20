@@ -3,6 +3,7 @@ package com.project.rateMyLearning.utility;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -16,15 +17,16 @@ File which is responsible for Creating Token
 public class JwtUtil {
 
     //Taking secret key
-    private static String secretKey;
+
+    private final static String secretKey = "myVerySecretKeyThatIsAtLeast32CharactersLong12345";
+
+
 
     public JwtUtil(){
 
     }
 
-    public JwtUtil(@Value("${app.jwt.secret}") String secretKey){
-        this.secretKey = secretKey;
-    }
+
 
     //Expiration time
     private static final long expirationTimeInMills = 43200000;

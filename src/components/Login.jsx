@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
+import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom'
 
 const Login = () => {
@@ -25,19 +26,24 @@ const Login = () => {
             let token = response.data;
             localStorage.setItem('token', token);
             //Getting user details
+            if (token!==null || token!==undefined ) {
+                const details = await axios.get("http://localhost:8080/api/user/getLoggedInUserDetails", {
+                    headers: { 'Authorization': "Bearer " + localStorage.getItem('token') }
+                })
+                console.log(details);
+                const role = details.data.userDto.role;
 
-            const details = await axios.get("http://localhost:8080/api/user/getLoggedInUserDetails", {
-                headers: { 'Authorization': "Bearer " + localStorage.getItem('token') }
-            })
-            console.log(details);
-            const role = details.data.role;
 
-            if (role === "REVIEWER") {
-                navigate("/reviewer");
+                if (role === "REVIEWER") {
+                    navigate("/reviewer");
+                }
+
             }
+
         } catch (error) {
             console.log(error);
-            toast.error(error.response.data.message);
+            const errMsg = error.response?.data?.message || 'An unknown error occurred.';
+            toast.error(errMsg);
         }
     }
 
@@ -53,15 +59,15 @@ const Login = () => {
                         <div className='card-body'>
 
                             <div className='mb-4'>
-                                <input type="text" className='form-control' placeholder='Enter Name' />
+                                <input value={username} type="text" className='form-control' placeholder='Enter Name' onChange={e => setUsername(e.target.value)} />
                             </div>
                             <div className='mb-4'>
-                                <input type="text" className='form-control' placeholder='Enter Password' />
+                                <input value={password} type="password" className='form-control' placeholder='Enter Password' onChange={e => setPassword(e.target.value)} />
                             </div>
                             <div className='mb-4 d-flex justify-content-center align-items-center'>
-                                <button onClick={loginUser} className='btn btn-primary'>Sign Up</button>
+                                <button onClick={loginUser} className='btn btn-primary'>Sign In</button>
                             </div>
-        
+
                             <div>
                                 <p>Don't have an account? <Link to="/signup">Sign Up Here</Link></p>
                             </div>
