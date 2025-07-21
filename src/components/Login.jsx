@@ -24,9 +24,10 @@ const Login = () => {
             })
             console.log(response.data);
             let token = response.data;
-            localStorage.setItem('token', token);
+            
             //Getting user details
-            if (token!==null || token!==undefined ) {
+            if (token) {
+                localStorage.setItem('token', token);
                 const details = await axios.get("http://localhost:8080/api/user/getLoggedInUserDetails", {
                     headers: { 'Authorization': "Bearer " + localStorage.getItem('token') }
                 })
@@ -42,8 +43,7 @@ const Login = () => {
 
         } catch (error) {
             console.log(error);
-            const errMsg = error.response?.data?.message || 'An unknown error occurred.';
-            toast.error(errMsg);
+            toast.error("Bad Credentials")
         }
     }
 
