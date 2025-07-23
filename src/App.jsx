@@ -6,6 +6,7 @@ import Dashboard from "./components/Reviewer/Dashboard"
 import Signup from "./components/Signup"
 import Profile from "./components/Reviewer/Profile"
 import MyReviews from "./components/Reviewer/MyReviews"
+import RateCourse from "./components/Reviewer/RateCourse"
 
 function App() {
 
@@ -20,7 +21,8 @@ function App() {
           <Route path="reviewer" element={<Layout />}>
             <Route index element={<Dashboard />} />
             <Route path="profile" element={<Profile />} />
-            <Route path="my-reviews" element={<MyReviews />} />
+            <Route path="your-reviews" element={<MyReviews />} />
+            <Route path="rate-course" element={<RateCourse/>}/>
           </Route>
         </Routes>
       </BrowserRouter>

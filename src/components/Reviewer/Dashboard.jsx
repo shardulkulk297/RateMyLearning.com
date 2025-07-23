@@ -58,7 +58,7 @@ const Dashboard = () => {
           <Link to="/reviewer/rate-course" className="btn btn-primary btn-lg me-3 mt-3">
             ➕ Rate a New Course
           </Link>
-          <Link to="/reviewer/my-reviews" className="btn btn-secondary btn-lg mt-3">
+          <Link to="/reviewer/your-reviews" className="btn btn-secondary btn-lg mt-3">
             📖 View All My Reviews
           </Link>
         </div>

@@ -6,7 +6,7 @@ const Search = () => {
             <div className="row justify-content-center">
                 <div className="col-md-10">
                     <div className="search-container">
-                        <input type="text" className="form-control search-input" placeholder="🔍 Search a course..."/>
+                        <input type="text" className="form-control search-input" placeholder="🔍 Search for what you want to learn..."/>
                         
                     </div>
                 </div>
