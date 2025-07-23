@@ -40,6 +40,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/user/getLoggedInUserDetails").authenticated()
                         .requestMatchers("/api/reviewer/add").permitAll()
                         .requestMatchers("/api/reviewer/profile/upload/{reviewerId}").permitAll()
+                        .requestMatchers("/api/review/getTotalReviews").authenticated()
+                        .requestMatchers("/api/review/getAvgRating").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

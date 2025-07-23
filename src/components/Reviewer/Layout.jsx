@@ -18,10 +18,8 @@ const Layout = () => {
           </Link>
           <div className='d-flex'>
             <Link to="/reviewer/profile " className="btn btn-primary me-2">
-              Profile
+              Your Profile
             </Link>
-            <Link to="/reviewer/my-reviews" className='btn btn-primary'>
-            Your Reviews</Link>
           </div>
         </div>
       </nav>
