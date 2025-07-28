@@ -1,11 +1,11 @@
 package com.project.rateMyLearning.contoller;
 
+import com.project.rateMyLearning.dto.ReviewDto;
+import com.project.rateMyLearning.dto.ReviewerDto;
 import com.project.rateMyLearning.service.ReviewService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -28,5 +28,12 @@ public class ReviewController {
     public ResponseEntity<?> getAvgRating(Principal principal){
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getAvgRating(principal.getName()));
     }
+
+    @PostMapping("/api/review/addReview")
+    public ResponseEntity<?> postReview(@RequestBody ReviewDto reviewDto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.postReview(reviewDto));
+    }
+
+
 
 }
