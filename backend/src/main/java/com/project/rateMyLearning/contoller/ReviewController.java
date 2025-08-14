@@ -29,7 +29,7 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getAvgRating(principal.getName()));
     }
 
-    @PostMapping("/api/review/addReview")
+    @PostMapping("/api/review/add")
     public ResponseEntity<?> postReview(@RequestBody ReviewDto reviewDto){
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.postReview(reviewDto));
     }

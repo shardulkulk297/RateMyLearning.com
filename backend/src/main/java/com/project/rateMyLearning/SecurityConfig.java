@@ -42,6 +42,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/reviewer/profile/upload/{reviewerId}").permitAll()
                         .requestMatchers("/api/review/getTotalReviews").authenticated()
                         .requestMatchers("/api/review/getAvgRating").authenticated()
+                        .requestMatchers("/api/review/add").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

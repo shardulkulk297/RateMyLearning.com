@@ -2,6 +2,7 @@ package com.project.rateMyLearning.service;
 
 import com.project.rateMyLearning.dto.ReviewDto;
 import com.project.rateMyLearning.dto.ReviewerDto;
+import com.project.rateMyLearning.exception.ResourceNotFoundException;
 import com.project.rateMyLearning.model.Course;
 import com.project.rateMyLearning.model.Review;
 import com.project.rateMyLearning.repository.ReviewRepository;
@@ -43,4 +44,16 @@ public class ReviewService {
 
         return reviewDto1;
     }
+
+    public void deleteReview(int reviewId){
+        Review review = reviewRepository.findById(reviewId).orElseThrow(()->new ResourceNotFoundException("Review Not Found"));
+        reviewRepository.delete(review);
+    }
+
+//    public ReviewDto updateReview(Review review){
+//        if(review.getReviewer())
+//        {
+//
+//        }
+//    }
 }
