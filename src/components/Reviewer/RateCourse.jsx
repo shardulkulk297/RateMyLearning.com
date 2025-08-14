@@ -11,21 +11,53 @@ const RateCourse = () => {
     const [link, setLink] = useState("");
     const [rating, setRating] = useState("");
     const [comment, setComment] = useState("");
-
-    const extractVideoId = (url)=>{
+    const [metadata, setMetadata] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const extractVideoId = (url) => {
         const regex = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([A-Za-z0-9_-]{11})/;
         const match = url.match(regex);
         return match ? match[1] : null;
     }
 
-    const fetchYoutubeMetaData = (videoUrl)=>{
-        const videoId = extractVideoId(videoUrl);
-        if(!videoId){
+    const isoDurationToMinutes = (iso) => {
+    const match = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+    const hours = parseInt(match[1] || 0, 10);
+    const minutes = parseInt(match[2] || 0, 10);
+    const seconds = parseInt(match[3] || 0, 10);
+    return hours * 60 + minutes + (seconds / 60);
+};
+
+    const fetchYoutubeMetaData = async (videoUrl) => {
+        // const videoId = extractVideoId(videoUrl);
+        const videoId = extractVideoId("https://youtu.be/SfOaZIGJ_gs");
+        if (!videoId) {
             toast.error("INVALID URL");
-            throw new Error("Invalid YOUTUBE URL");            
+            throw new Error("Invalid YOUTUBE URL");
         }
 
-        const apiKey = 
+        const apiKey = import.meta.env.VITE_YOUTUBE_API_KEY;;
+        const endpoint = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${videoId}&key=${apiKey}`;
+
+        const response = await fetch(endpoint);
+        const data = await response.json();
+        console.log(data);
+
+        if (!data.items || data.items.length === 0) {
+            throw new Error("Video not found");
+        }
+
+        const { snippet, contentDetails } = data.items[0];
+        const durationMinutes = isoDurationToMinutes(contentDetails.duration);
+
+        return {
+            title: snippet.title,
+            description: snippet.description,
+            instructor: snippet.channelTitle,
+            thumbnailUrl: snippet.thumbnails.medium.url,
+            publishedDate: snippet.publishedAt,
+            durationMinutes
+        };
+
     }
 
     const submitReview = async (e) => {
@@ -33,20 +65,34 @@ const RateCourse = () => {
         try {
             // console.log(title, platform, pricing, difficulty, certification, link, rating, comment);
 
-            const response = await axios.post("http://localhost:8080/api/review/add", {
-                course: {
 
-                    title: title,
-                    platform: platform,
-                    pricing: pricing,
-                    difficulty: difficulty,
-                    certification: certification,
-
-
+            const handleFetchMetadata = async () => {
+                try {
+                    setLoading(true);
+                    const data = await fetchYoutubeMetaData("https://youtu.be/_9_0AyCLDNY");
+                    setMetadata(data);
+                } catch (err) {
+                    alert(err.message);
+                } finally {
+                    setLoading(false);
                 }
-            }, {
-                headers: { Authorization: "Bearer " + localStorage.getItem('token') }
-            })
+            };
+            handleFetchMetadata();
+
+            // const response = await axios.post("http://localhost:8080/api/review/add", {
+            //     course: {
+
+            //         title: title,
+            //         platform: platform,
+            //         pricing: pricing,
+            //         difficulty: difficulty,
+            //         certification: certification,
+
+
+            //     }
+            // }, {
+            //     headers: { Authorization: "Bearer " + localStorage.getItem('token') }
+            // })
 
         } catch (error) {
             console.log(error);
