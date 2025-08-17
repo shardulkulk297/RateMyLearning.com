@@ -22,6 +22,16 @@ public class Course {
     private int durationMinutes;
     private String language;
     private String averageRating;
+    @ManyToOne
+    private Instructor instructor;
+
+    public Instructor getInstructor() {
+        return instructor;
+    }
+
+    public void setInstructor(Instructor instructor) {
+        this.instructor = instructor;
+    }
 
     public int getId() {
         return id;

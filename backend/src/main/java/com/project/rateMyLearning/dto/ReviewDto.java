@@ -11,7 +11,6 @@ public class ReviewDto {
 
     private Course course;
     private Review review;
-    private Instructor instructor;
 
     public Course getCourse() {
         return course;
@@ -29,11 +28,5 @@ public class ReviewDto {
         this.review = review;
     }
 
-    public Instructor getInstructor() {
-        return instructor;
-    }
 
-    public void setInstructor(Instructor instructor) {
-        this.instructor = instructor;
-    }
 }

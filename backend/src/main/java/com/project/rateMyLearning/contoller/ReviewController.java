@@ -30,8 +30,8 @@ public class ReviewController {
     }
 
     @PostMapping("/api/review/add")
-    public ResponseEntity<?> postReview(@RequestBody ReviewDto reviewDto){
-        return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.postReview(reviewDto));
+    public ResponseEntity<?> postReview(@RequestBody ReviewDto reviewDto, Principal principal){
+        return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.postReview(reviewDto, principal.getName()));
     }
 
 
