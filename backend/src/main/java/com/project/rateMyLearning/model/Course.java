@@ -14,12 +14,12 @@ public class Course {
     private int id;
     private String title;
     private String platform;
+    private String thumbnailUrl;
+    private LocalDate publishedDate;
     @Enumerated(EnumType.STRING) private Pricemodel priceModel;
     @Enumerated(EnumType.STRING) private Difficulty difficulty;
     private String isCertification;
-    private LocalDate publishedDate;
     private int durationMinutes;
-    private String thumbnailUrl;
     private String language;
     private String averageRating;
 
@@ -47,6 +47,22 @@ public class Course {
         this.platform = platform;
     }
 
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public LocalDate getPublishedDate() {
+        return publishedDate;
+    }
+
+    public void setPublishedDate(LocalDate publishedDate) {
+        this.publishedDate = publishedDate;
+    }
+
     public Pricemodel getPriceModel() {
         return priceModel;
     }
@@ -71,28 +87,12 @@ public class Course {
         this.isCertification = isCertification;
     }
 
-    public LocalDate getPublishedDate() {
-        return publishedDate;
-    }
-
-    public void setPublishedDate(LocalDate publishedDate) {
-        this.publishedDate = publishedDate;
-    }
-
     public int getDurationMinutes() {
         return durationMinutes;
     }
 
     public void setDurationMinutes(int durationMinutes) {
         this.durationMinutes = durationMinutes;
-    }
-
-    public String getThumbnailUrl() {
-        return thumbnailUrl;
-    }
-
-    public void setThumbnailUrl(String thumbnailUrl) {
-        this.thumbnailUrl = thumbnailUrl;
     }
 
     public String getLanguage() {
