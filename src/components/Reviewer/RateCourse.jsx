@@ -11,6 +11,7 @@ const RateCourse = () => {
     const [link, setLink] = useState("");
     const [rating, setRating] = useState("");
     const [comment, setComment] = useState("");
+    const [language, setLanguage] = useState("");
     const [metadata, setMetadata] = useState(null);
     const [loading, setLoading] = useState(false);
     const extractVideoId = (url) => {
@@ -29,58 +30,85 @@ const RateCourse = () => {
     };
 
     //Function to fetch The youtube metadata
+    // inside your component file (or move to a helper/service module)
+
     const fetchYoutubeMetaData = async (videoUrl) => {
-        // const videoId = extractVideoId(videoUrl);
-        const videoId = extractVideoId("https://youtu.be/SfOaZIGJ_gs");
+        const videoId = extractVideoId(videoUrl);
         if (!videoId) {
             toast.error("INVALID URL");
             throw new Error("Invalid YOUTUBE URL");
         }
 
-        const apiKey = import.meta.env.VITE_YOUTUBE_API_KEY;;
-        const endpoint = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${videoId}&key=${apiKey}`;
+        const apiKey = import.meta.env.VITE_YOUTUBE_API_KEY;
+        if (!apiKey) {
+            throw new Error("Missing YouTube API key (VITE_YOUTUBE_API_KEY)");
+        }
 
-        const response = await fetch(endpoint);
-        const data = await response.json();
-        console.log(data);
+        // 1) Fetch video snippet + contentDetails
+        const videosEndpoint = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${videoId}&key=${apiKey}`;
+        const videoRes = await fetch(videosEndpoint);
+        const videoData = await videoRes.json();
 
-        if (!data.items || data.items.length === 0) {
+        if (!videoData.items || videoData.items.length === 0) {
             throw new Error("Video not found");
         }
 
-        const { snippet, contentDetails } = data.items[0];
+        const { snippet, contentDetails } = videoData.items[0];
         const durationMinutes = isoDurationToMinutes(contentDetails.duration);
+
+        // basic channel info from the video response
+        const channelId = snippet.channelId;
+        const channelTitle = snippet.channelTitle;
+        // reliable fallback URL:
+        let profileUrl = `https://www.youtube.com/channel/${channelId}`;
+
+        // // 2) OPTIONAL: try to enrich with channels.list to get customUrl or handle (nicer link)
+        // try {
+        //     const channelsEndpoint = `https://www.googleapis.com/youtube/v3/channels?part=snippet&id=${channelId}&key=${apiKey}`;
+        //     const channelsRes = await fetch(channelsEndpoint);
+        //     const channelsData = await channelsRes.json();
+
+        //     if (channelsData.items && channelsData.items.length > 0) {
+        //         const channelSnippet = channelsData.items[0].snippet || {};
+
+        //         // prefer handle (/@handle) if present (some channels have it)
+        //         // NOTE: newer APIs may return `snippet.customUrl` or `snippet.handle` depending on data
+        //         if (channelSnippet.handle) {
+        //             profileUrl = `https://www.youtube.com/@${channelSnippet.handle.replace(/^@/, "")}`;
+        //         } else if (channelSnippet.customUrl) {
+        //             profileUrl = `https://www.youtube.com/c/${channelSnippet.customUrl}`;
+        //         }
+        //         // otherwise we keep the /channel/{id} fallback
+        //     }
+        // } catch (err) {
+        //     // non-fatal — if channels fetch fails, we still have channelId fallback
+        //     console.warn("Failed to fetch channel details:", err);
+        // }
 
         return {
             title: snippet.title,
             description: snippet.description,
-            instructor: snippet.channelTitle,
-            thumbnailUrl: snippet.thumbnails.medium.url,
+            instructor: channelTitle,
+            channelId,
+            profileUrl,              // <-- channel/profile URL you asked for
+            thumbnailUrl:
+                snippet.thumbnails?.medium?.url ||
+                snippet.thumbnails?.default?.url ||
+                "",
             publishedDate: snippet.publishedAt,
-            durationMinutes
+            durationMinutes,
+            durationMinutes: durationMinutes
         };
+    };
 
-    }
 
     const submitReview = async (e) => {
         e.preventDefault()
         try {
             // console.log(title, platform, pricing, difficulty, certification, link, rating, comment);
 
-
-            const handleFetchMetadata = async () => {
-                try {
-                    setLoading(true);
-                    const data = await fetchYoutubeMetaData("https://youtu.be/_9_0AyCLDNY");
-                    setMetadata(data);
-                    console.log(metadata);
-                } catch (err) {
-                    alert(err.message);
-                } finally {
-                    setLoading(false);
-                }
-            };
-            handleFetchMetadata();
+            setLoading(true);
+            const metadata = await fetchYoutubeMetaData(link); // use the user's input link
             // title: snippet.title,
             // description: snippet.description,
             // instructor: snippet.channelTitle,
@@ -89,22 +117,34 @@ const RateCourse = () => {
             // durationMinutes
             const response = await axios.post("http://localhost:8080/api/review/add", {
                 course: {
-                     
                     title: metadata.title,
                     platform: platform,
                     thumbnail: metadata.thumbnailUrl,
                     publishedDate: metadata.publishedDate,
                     priceModel: pricing,
-                    
-
-                   
-
-
+                    difficulty: difficulty,
+                    isCertification: certification,
+                    durationMinutes: metadata.durationMinutes,
+                    language: language,
+                    instructor: {
+                        name: metadata.instructor.channelTitle,
+                        profileUrl: metadata.instructor.profileUrl
+                    }
+                },
+                review: {
+                    rating: rating,
+                    comment: comment,
+                    instructor: {
+                        name: metadata.instructor.channelTitle,
+                        profileUrl: metadata.instructor.profileUrl
+                    }
                 }
             }, {
                 headers: { Authorization: "Bearer " + localStorage.getItem('token') }
             })
-
+            console.log(response.data);
+            toast.success("Review Posted Successfully!!");
+            setLoading(false);
         } catch (error) {
             console.log(error);
         }
@@ -223,6 +263,17 @@ const RateCourse = () => {
                                             onChange={e => setRating(e.target.value)}
                                         />
                                     </div>
+                                </div>
+
+                                <div className='mb-3'>
+                                    <label className="form-label">Language</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        value={language}
+                                        onChange={e => setLanguage(e.target.value)}
+                                    />
+
                                 </div>
 
                                 {/* Comment */}
