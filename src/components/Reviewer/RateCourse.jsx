@@ -88,9 +88,9 @@ const RateCourse = () => {
         return {
             title: snippet.title,
             description: snippet.description,
-            instructor: channelTitle,
-            channelId,
-            profileUrl,              // <-- channel/profile URL you asked for
+            instructor: {channelTitle: channelTitle,
+            channelId: channelId,
+            profileUrl: profileUrl  },            // <-- channel/profile URL you asked for
             thumbnailUrl:
                 snippet.thumbnails?.medium?.url ||
                 snippet.thumbnails?.default?.url ||
@@ -105,10 +105,11 @@ const RateCourse = () => {
     const submitReview = async (e) => {
         e.preventDefault()
         try {
-            // console.log(title, platform, pricing, difficulty, certification, link, rating, comment);
+            console.log(platform, pricing, difficulty, certification, link, rating, comment);
 
             setLoading(true);
-            const metadata = await fetchYoutubeMetaData(link); // use the user's input link
+            const metadata = await fetchYoutubeMetaData(link); 
+            console.log(metadata)// use the user's input link
             // title: snippet.title,
             // description: snippet.description,
             // instructor: snippet.channelTitle,
@@ -119,7 +120,7 @@ const RateCourse = () => {
                 course: {
                     title: metadata.title,
                     platform: platform,
-                    thumbnail: metadata.thumbnailUrl,
+                    thumbnailUrl: metadata.thumbnailUrl,
                     publishedDate: metadata.publishedDate,
                     priceModel: pricing,
                     difficulty: difficulty,
