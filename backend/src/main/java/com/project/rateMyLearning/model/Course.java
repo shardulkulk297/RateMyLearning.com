@@ -16,6 +16,8 @@ public class Course {
     private String platform;
     private String thumbnailUrl;
     private LocalDate publishedDate;
+    private int videoCount;
+    private String typeOfCourse;
     @Enumerated(EnumType.STRING) private Pricemodel priceModel;
     @Enumerated(EnumType.STRING) private Difficulty difficulty;
     private String isCertification;
@@ -35,6 +37,22 @@ public class Course {
 
     public int getId() {
         return id;
+    }
+
+    public int getVideoCount() {
+        return videoCount;
+    }
+
+    public void setVideoCount(int videoCount) {
+        this.videoCount = videoCount;
+    }
+
+    public String getTypeOfCourse() {
+        return typeOfCourse;
+    }
+
+    public void setTypeOfCourse(String typeOfCourse) {
+        this.typeOfCourse = typeOfCourse;
     }
 
     public void setId(int id) {
