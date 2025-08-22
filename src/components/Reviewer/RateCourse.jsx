@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react'
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const RateCourse = () => {
     const [title, setTitle] = useState("");
@@ -14,6 +15,8 @@ const RateCourse = () => {
     const [language, setLanguage] = useState("");
     const [metadata, setMetadata] = useState(null);
     const [loading, setLoading] = useState(false);
+
+    const navigate = useNavigate();
 
     // utility helpers (keep these outside the function)
     const extractVideoId = (url) => {
@@ -146,6 +149,7 @@ const RateCourse = () => {
             // durationMinutes
             const response = await axios.post("http://localhost:8080/api/review/add", {
                 course: {
+                    link: link,
                     title: metadata.title,
                     platform: platform,
                     thumbnailUrl: metadata.thumbnailUrl,
@@ -175,10 +179,18 @@ const RateCourse = () => {
             })
             console.log(response.data);
             toast.success("Review Posted Successfully!!");
+            toast.success("Navigating to your reviews");
+            setTimeout(() => {
+                navigate("/reviewer/your-reviews");
+            }, 3000);
             setLoading(false);
         } catch (error) {
             console.log(error);
+            const message = error?.response.data.message;
+            toast.error(message);
         }
+
+
 
     }
 
