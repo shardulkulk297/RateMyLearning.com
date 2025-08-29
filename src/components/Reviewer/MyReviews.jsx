@@ -26,6 +26,16 @@ const MyReviews = () => {
   }, [])
   return (
     <div className='container py-5'>
+      <nav aria-label="breadcrumb" className="mb-4">
+        <ol className="breadcrumb bg-light px-3 py-2 rounded shadow-sm">
+          <li className="breadcrumb-item">
+            <a href="/reviewer" className="text-decoration-none">🏠 Dashboard</a>
+          </li>
+          <li className="breadcrumb-item active" aria-current="page">
+            Your Reviews
+          </li>
+        </ol>
+      </nav>
       <div className='d-flex align-items-center mb-4'>
         <h2 className='mb-0 fw-bold text-primary'>📋 Your Reviews</h2>
         <span className='badge bg-secondary ms-3'>{reviews.length} Reviews</span>

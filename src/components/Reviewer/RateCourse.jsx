@@ -262,7 +262,19 @@ const RateCourse = () => {
 
     return (
         <div className="container py-5">
+
             <h2 className="mb-4">Rate a Course 🏫 <span className="badge bg-info text-dark align-middle">YouTube only</span></h2>
+            <nav aria-label="breadcrumb" className="mb-4">
+                <ol className="breadcrumb bg-light px-3 py-2 rounded shadow-sm">
+                    <li className="breadcrumb-item">
+                        <a href="/reviewer" className="text-decoration-none">🏠 Dashboard</a>
+                    </li>
+                    <li className="breadcrumb-item active" aria-current="page">
+                        Rate Course
+                    </li>
+                </ol>
+            </nav>
+
 
             <div className="row justify-content-center">
                 <div className="col-12 col-md-10 col-lg-8">

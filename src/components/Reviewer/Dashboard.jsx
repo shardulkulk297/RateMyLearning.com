@@ -16,21 +16,21 @@ const Dashboard = () => {
       })
       console.log(response.data);
       setUser(response.data);
-    }                  
+    }
     getUser();
   }, [])
 
-  useEffect(()=>{
-    const getReviewStats = async()=>{
+  useEffect(() => {
+    const getReviewStats = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/review/getTotalReviews",{
-          headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
+        const response = await axios.get("http://localhost:8080/api/review/getTotalReviews", {
+          headers: { 'Authorization': "Bearer " + localStorage.getItem('token') }
         })
         console.log(response.data);
         setTotalReviews(response.data);
 
-        const response2 = await axios.get("http://localhost:8080/api/review/getAvgRating",{
-           headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
+        const response2 = await axios.get("http://localhost:8080/api/review/getAvgRating", {
+          headers: { 'Authorization': "Bearer " + localStorage.getItem('token') }
         })
         console.log(response2.data);
         setAvgRatings(response.data);
@@ -39,10 +39,17 @@ const Dashboard = () => {
       }
     }
     getReviewStats();
-  },[totalReviews, avgRating])
+  }, [totalReviews, avgRating])
 
   return (
-    <div className='container py-3'>
+    <div className='container py-5'>
+      <nav aria-label="breadcrumb" className="mb-4">
+        <ol className="breadcrumb bg-light px-3 py-2 rounded shadow-sm">
+          <li className="breadcrumb-item active" aria-current="page">
+            Dashboard
+          </li>
+        </ol>
+      </nav>
 
       <div className="row mb-4 text-center">
         <div className="col">
@@ -88,7 +95,7 @@ const Dashboard = () => {
 
 
 
-      
+
 
 
     </div>
