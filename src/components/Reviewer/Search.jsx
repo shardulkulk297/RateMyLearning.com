@@ -7,6 +7,7 @@ const Search = () => {
                 <div className="col-md-10">
                     <div className="search-container">
                         <input type="text" className="form-control search-input" placeholder="🔍 Search for what you want to learn..."/>
+                        <button className='btn btn-primary btn-sm'>Search</button>
                         
                     </div>
                 </div>
