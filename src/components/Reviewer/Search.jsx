@@ -5,14 +5,18 @@ const Search = () => {
         <div className="container py-5">
             <div className="row justify-content-center">
                 <div className="col-md-10">
-                    <div className="search-container">
-                        <input type="text" className="form-control search-input" placeholder="🔍 Search for what you want to learn..."/>
-                        <button className='btn btn-primary btn-sm'>Search</button>
-                        
+                    <div className="d-flex">
+                        <input
+                            type="text"
+                            className="form-control me-2"
+                            placeholder="🔍 Search for what you want to learn..."
+                        />
+                        <button className="btn btn-primary">Search</button>
                     </div>
                 </div>
             </div>
         </div>
+
     )
 }
 
