@@ -4,6 +4,10 @@ import toast from 'react-hot-toast';
 
 const MyReviews = () => {
 
+  /*
+  Page of showing users the reviews given by them
+  */
+
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
