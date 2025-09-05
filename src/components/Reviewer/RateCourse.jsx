@@ -140,6 +140,12 @@ const RateCourse = () => {
 
             setLoading(true);
             const metadata = await fetchYoutubeMetaData(link);
+            if (metadata.instructor === null) {
+                toast.error("Channel details are missing. Please try pasting the link again!!");
+                setLoading(false);
+                return;
+            }
+
             console.log(metadata)// use the user's input link
             // title: snippet.title,
             // description: snippet.description,

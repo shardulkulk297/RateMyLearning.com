@@ -14,7 +14,9 @@ const Login = () => {
         removeToken();
     }, [])
 
-    const loginUser = async () => {
+    const loginUser = async (e) => {
+        e.preventDefault();
+
         try {
             //Encoding the credentials
             let encodedString = window.btoa(username + ":" + password);
@@ -24,7 +26,7 @@ const Login = () => {
             })
             console.log(response.data);
             let token = response.data;
-            
+
             //Getting user details
             if (token) {
                 localStorage.setItem('token', token);
@@ -58,19 +60,25 @@ const Login = () => {
                         </div>
                         <div className='card-body'>
 
-                            <div className='mb-4'>
-                                <input value={username} type="text" className='form-control' placeholder='Enter Name' onChange={e => setUsername(e.target.value)} />
-                            </div>
-                            <div className='mb-4'>
-                                <input value={password} type="password" className='form-control' placeholder='Enter Password' onChange={e => setPassword(e.target.value)} />
-                            </div>
-                            <div className='mb-4 d-flex justify-content-center align-items-center'>
-                                <button onClick={loginUser} className='btn btn-primary'>Sign In</button>
-                            </div>
+                            <form action="" onSubmit={loginUser}>
 
-                            <div>
-                                <p>Don't have an account? <Link to="/signup">Sign Up Here</Link></p>
-                            </div>
+
+                                <div className='mb-4'>
+                                    <input value={username} type="text" className='form-control' placeholder='Enter Name' onChange={e => setUsername(e.target.value)} />
+                                </div>
+                                <div className='mb-4'>
+                                    <input value={password} type="password" className='form-control' placeholder='Enter Password' onChange={e => setPassword(e.target.value)} />
+                                </div>
+                                <div className='mb-4 d-flex justify-content-center align-items-center'>
+                                    <button type='submit' className='btn btn-primary'>Sign In</button>
+                                </div>
+
+                                <div>
+                                    <p>Don't have an account? <Link to="/signup">Sign Up Here</Link></p>
+                                </div>
+
+                            </form>
+
 
                         </div>
 
