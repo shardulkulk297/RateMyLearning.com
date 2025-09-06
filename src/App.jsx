@@ -7,6 +7,8 @@ import Signup from "./components/Signup"
 import Profile from "./components/Reviewer/Profile"
 import MyReviews from "./components/Reviewer/MyReviews"
 import RateCourse from "./components/Reviewer/RateCourse"
+import SearchResults from "./components/Reviewer/SearchResults"
+import ViewReviews from "./components/Reviewer/ViewReviews"
 
 function App() {
 
@@ -23,6 +25,8 @@ function App() {
             <Route path="profile" element={<Profile />} />
             <Route path="your-reviews" element={<MyReviews />} />
             <Route path="rate-course" element={<RateCourse/>}/>
+            <Route path="search-results" element={<SearchResults/>} />
+            <Route path="view-reviews" element = {<ViewReviews/>}/>
           </Route>
         </Routes>
       </BrowserRouter>
